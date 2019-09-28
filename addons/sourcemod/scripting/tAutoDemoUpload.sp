@@ -133,15 +133,8 @@ public UploadComplete(const String:sTarget[], const String:sLocalFile[], const S
 		}
 	}
 
-	for(new client = 1; client <= MaxClients; client++) {
-		if(IsClientInGame(client) && GetAdminFlag(GetUserAdmin(client), Admin_Reservation)) {
-			if(iErrorCode == 0) {
-				PrintToChat(client, "[SourceTV] Demo uploaded successfully");
-			} else {
-				PrintToChat(client, "[SourceTV] Failed uploading demo file. Check the server log files.");
-			}
-		}
-	}
+	if(iErrorCode == 0) PrintToChatAll("[SourceTV] Demo uploaded successfully");
+	else PrintToChatAll("[SourceTV] Failed uploading demo file. Check the server log files.");
 }
 
 public GetConVarValueInt(const String:sConVar[]) {
