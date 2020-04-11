@@ -9,7 +9,8 @@ This is also the reason why the syntax is mixed & weird at times, I mostly fixed
 2. Download this [repository](https://github.com/MoritzLoewenstein/AutoDemoUpload/archive/master.zip) and unzip it to your /csgo folder on your server.
 3. Set your FastDl options in `addons/sourcemod/configs/RemoteTargets.cfg` in `"demos"`.
 4. Make sure the plugin is running (`sm plugins list`)
-5. It should work
+5. It should start uploading the demo after executing `tv_record` and `tv_stoprecord` and  
+   announce the download link in allchat after completing the upload.
 
 
 ## Options
