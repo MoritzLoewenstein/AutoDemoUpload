@@ -15,8 +15,8 @@ This is also the reason why the syntax is mixed & weird at times, I mostly fixed
 
 ## Options
 
-### FastDL
-The fastDl options are stored in `addons/sourcemod/configs/RemoteTargets.cfg`
+### FTP Server
+The FTP Server options are stored in `addons/sourcemod/configs/RemoteTargets.cfg`
 
 1. Add your data in these self-explanatory options:
 ```
