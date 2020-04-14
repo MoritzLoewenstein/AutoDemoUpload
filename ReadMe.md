@@ -49,7 +49,7 @@ To delete the demo after upload (and the compressed demo), set `sm_tautodemouplo
 ### Enable/Disable
 You can enable and disable this Plugin with `sm_tautodemoupload_enable`.  
 `1` -> enabled  
-`2` -> disabled
+`0` -> disabled
 
 
 
