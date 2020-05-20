@@ -381,6 +381,7 @@ public ClearHandle(&Handle:hndl) {
 }
 
 public getFileBasename(const String:sFilename[], String:sOutput[], maxlength) {
+	// search backwards in full path for /
 	new iPos = FindCharInString(sFilename, '/', true);
 
 	if(iPos != -1) {

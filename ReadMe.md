@@ -51,6 +51,13 @@ You can enable and disable this Plugin with `sm_tautodemoupload_enable`.
 `1` -> enabled  
 `0` -> disabled
 
+## FAQ
+
+### How can I set the local demo path?
+The demo path gets parsed from the `tv_record` command, e. g. `tv_record a/b/c/demoname.dem`.  
+Make sure the directory exists. When uploading, the demo will be in `targetfolder/demoname.dem`,  
+NOT `targetfolder/a/b/c/demoname.dem`.
+
 
 
 
