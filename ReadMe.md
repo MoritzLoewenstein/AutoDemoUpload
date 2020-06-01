@@ -54,6 +54,10 @@ To delete the demo after upload (and the compressed demo), set `sm_tautodemouplo
    - `sm_teasyftp_discord_webhook <your_discord_webhook>`
    - `sm_teasyftp_announce_on_discord 1`
 
+### Change Format of Message
+`sm_teasyftp_announce_format "%map: %dl_url"`  
+use `%map`, `%dl_url` & `%host`
+
 ### Enable/Disable
 You can enable and disable this Plugin with `sm_tautodemoupload_enable`.  
 `1` -> enabled  
