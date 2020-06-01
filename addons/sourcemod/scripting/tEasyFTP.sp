@@ -1,7 +1,7 @@
 #pragma semicolon 1
 #pragma dynamic 32767 // Without this line will crash server!!
 #include <sourcemod>
-#include <curl>
+#include <cURL>
 #include <discord>
 
 #define VERSION "0.0.2"
@@ -27,6 +27,8 @@ new bool:g_bUploading = false;
 new Handle:g_hCvarDiscordWebhook = INVALID_HANDLE;
 new String:g_sDiscordWebhook[255];
 
+new Handle:g_hCvarAnnounceMessageFormat = INVALID_HANDLE;
+
 new Handle:g_hCvarAnnounceOnDiscord = INVALID_HANDLE;
 
 public Plugin:myinfo =
@@ -43,6 +45,8 @@ public OnPluginStart() {
 	g_hCvarDiscordWebhook = CreateConVar("sm_teasyftp_discord_webhook", "", "The Discord Webhook to use for announcing uploads.");
 
 	g_hCvarAnnounceOnDiscord = CreateConVar("sm_teasyftp_announce_on_discord", "0", "Announce download link on discord.", _, true, 0.0, true, 1.0);
+
+	g_hCvarAnnounceMessageFormat = CreateConVar("sm_teasyftp_announce_format", "%map: %dl_url", "Announce message format.");
 
 	g_hUploadForward = CreateForward(ET_Event, Param_String, Param_String, Param_String, Param_Cell, Param_Cell);
 
@@ -201,7 +205,7 @@ public ProcessQueue() {
 				}
 
 				decl String:sLocalFileBasename[PLATFORM_MAX_PATH];
-				getFileBasename(sLocalFile, sLocalFileBasename, sizeof(sLocalFileBasename));
+				GetFileBasename(sLocalFile, sLocalFileBasename, sizeof(sLocalFileBasename));
 
 				decl String:sRemoteFile[PLATFORM_MAX_PATH];
 				GetTrieString(hTrie_UploadEntry, "remote", sRemoteFile, sizeof(sRemoteFile));
@@ -249,18 +253,15 @@ public ProcessQueue() {
 
 				decl String:sFtpURL[512];
 				decl String:sDownloadURL[512];
-				decl String:sCurrentMap[64];
 				Format(sFtpURL, sizeof(sFtpURL), "ftp://%s:%s@%s:%i%s%s", sUser, sPassword, sHost, iPort, sForcePath, sRemoteFile);
 				Format(sDownloadURL, sizeof(sDownloadURL), "%s/%s%s%s", sHost, sUser, sForcePath, sRemoteFile);
+				decl String:sAnnounceMessage[512];
+				FormatAnnounceMessage(sDownloadURL, sAnnounceMessage, sizeof(sAnnounceMessage));
 				if (GetConVarBool(g_hCvarAnnounceOnDiscord)) {
 					GetConVarString(g_hCvarDiscordWebhook, g_sDiscordWebhook, sizeof(g_sDiscordWebhook));
-					GetCurrentMap(sCurrentMap, sizeof(sCurrentMap));
-					Format(sDownloadURL, sizeof(sDownloadURL), "%s: http://%s", sCurrentMap, sDownloadURL);
-					Discord_SendMessage(g_sDiscordWebhook, sDownloadURL);
+					Discord_SendMessage(g_sDiscordWebhook, sAnnounceMessage);
 				}
-				else {
-					PrintToChatAll("[SourceTV] Download Demo: %s", sDownloadURL);
-				}
+				else PrintToChatAll(sAnnounceMessage);
 				LogMessage("Uploading file %s (%i byte) to target %s", sLocalFileBasename, FileSize(sLocalFile), sTarget);
 				new Handle:hCurl = curl_easy_init();
 				if(hCurl == INVALID_HANDLE) {
@@ -400,13 +401,30 @@ public ClearHandle(&Handle:hndl) {
 	}
 }
 
-public getFileBasename(const String:sFilename[], String:sOutput[], maxlength) {
+public GetFileBasename(const String:sFilename[], String:sOutput[], maxlength) {
 	new iPos = FindCharInString(sFilename, '/', true);
 
 	if(iPos != -1) {
 		strcopy(sOutput, maxlength, sFilename[iPos+1]);
 	} else {
 		strcopy(sOutput, maxlength, sFilename);
+	}
+}
+
+public FormatAnnounceMessage(const String:sDownloadUrl[], String:sBuffer[], maxlength) {
+	GetConVarString(g_hCvarAnnounceMessageFormat, sBuffer, maxlength);
+	if(StrContains(sBuffer, "%host", false) != -1) {
+		decl String:sServerHostname[128];
+		GetHostName(sServerHostname, sizeof(sServerHostname));
+		ReplaceString(sBuffer, maxlength, "%host", sServerHostname, false);
+	}
+	if(StrContains(sBuffer, "%map", false) != -1) {
+		decl String:sCurrentMap[64];
+		GetCurrentMap(sCurrentMap, sizeof(sCurrentMap));
+		ReplaceString(sBuffer, maxlength, "%map", sCurrentMap, false);
+	}
+	if(StrContains(sBuffer, "%dl_url", false) != -1) {
+		ReplaceString(sBuffer, maxlength, "%dl_url", sDownloadUrl, false);
 	}
 }
 
@@ -436,4 +454,21 @@ stock bool:IsValidPlugin(Handle:hPlugin) {
 	CloseHandle(hIterator);
 
 	return bPluginExists;
+}
+
+stock bool GetHostName(char[] buffer, int size) {
+	static ConVar cvHostname = null;
+
+	if (cvHostname == null) {
+		cvHostname = FindConVar("hostname");
+	}
+
+	if (cvHostname == null) {
+		buffer[0] = '\0';
+		return false;
+	}
+
+	cvHostname.GetString(buffer, size);
+
+	return true;
 }
