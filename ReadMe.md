@@ -4,6 +4,8 @@ Credits to Thrawn, this wouldnt exist without his work.
 
 This is also the reason why the syntax is mixed & weird at times, I mostly fixed compilation erros and minorly changed behaviour in some cases.
 
+One interesting additional feature is the ability to send the download link of every demo to a discord textchannel.
+
 ## How to use
 1. Confirm you have [SourceMod](https://www.sourcemod.net/downloads.php) and [MetaMod:Source](https://metamodsource.net/downloads.php) running on your server.
 2. Download this [repository](https://github.com/MoritzLoewenstein/AutoDemoUpload/archive/master.zip) and unzip it to your /csgo folder on your server.
@@ -45,6 +47,12 @@ Bzip is already included, you just have to set `sm_tautodemoupload_bzip2` to a v
 
 ### Delete Demo after upload
 To delete the demo after upload (and the compressed demo), set `sm_tautodemoupload_delete 1`.
+
+### Send Download Link to Discord Channel
+1. create a discord textchannel and set up a webhook.
+2. set these two convars:
+   - `sm_teasyftp_discord_webhook <your_discord_webhook>`
+   - `sm_teasyftp_announce_on_discord 1`
 
 ### Enable/Disable
 You can enable and disable this Plugin with `sm_tautodemoupload_enable`.  
