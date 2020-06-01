@@ -133,8 +133,7 @@ public UploadComplete(const String:sTarget[], const String:sLocalFile[], const S
 		}
 	}
 
-	if(iErrorCode == 0) PrintToChatAll("[SourceTV] Demo uploaded successfully");
-	else PrintToChatAll("[SourceTV] Failed uploading demo file. Check the server log files.");
+	LogMessage("demo upload errorcode: %d", iErrorCode);
 }
 
 public GetConVarValueInt(const String:sConVar[]) {
