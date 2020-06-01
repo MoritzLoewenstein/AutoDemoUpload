@@ -32,7 +32,6 @@ The FTP Server options are stored in `addons/sourcemod/configs/RemoteTargets.cfg
 		"password"	""
 		"path"		"/demos"
 		"ssl"		"try"
-		
 		"CreateMissingDirs"	"1"
 	}
 }
