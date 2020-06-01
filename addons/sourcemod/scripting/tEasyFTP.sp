@@ -254,7 +254,7 @@ public ProcessQueue() {
 				decl String:sFtpURL[512];
 				decl String:sDownloadURL[512];
 				Format(sFtpURL, sizeof(sFtpURL), "ftp://%s:%s@%s:%i%s%s", sUser, sPassword, sHost, iPort, sForcePath, sRemoteFile);
-				Format(sDownloadURL, sizeof(sDownloadURL), "%s/%s%s%s", sHost, sUser, sForcePath, sRemoteFile);
+				Format(sDownloadURL, sizeof(sDownloadURL), "http://%s/%s%s%s", sHost, sUser, sForcePath, sRemoteFile);
 				decl String:sAnnounceMessage[512];
 				FormatAnnounceMessage(sDownloadURL, sAnnounceMessage, sizeof(sAnnounceMessage));
 				if (GetConVarBool(g_hCvarAnnounceOnDiscord)) {
