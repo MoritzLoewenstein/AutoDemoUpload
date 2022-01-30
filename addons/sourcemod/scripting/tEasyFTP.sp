@@ -117,7 +117,7 @@ public NativeUploadFile(Handle:hPlugin, iNumParams) {
 		LogError("Target %s does not exist", sTarget);
 	}
 
-	if(!g_bUploading)ProcessQueue();
+	if(!g_bUploading) ProcessQueue();
 }
 
 public ReloadFtpTargetKV() {
@@ -240,7 +240,7 @@ public ProcessQueue() {
 				new bool:bCreateMissingDirs = bool:KvGetNum(g_hKv_FtpTargets, "CreateMissingDirs", 0);
 
 				// Prepend missing slash
-				if(strncmp(sForcePath, "/", 1) != 0) {
+				if(strncmp(sForcePath[0], "/", 1) != 0) {
 					Format(sForcePath, sizeof(sForcePath), "/%s", sForcePath);
 				}
 
@@ -249,12 +249,22 @@ public ProcessQueue() {
 					sForcePath[strlen(sForcePath)-1] = 0;
 				}
 
-				new iPort = KvGetNum(g_hKv_FtpTargets, "port", 21);
+				decl String:sPort[8];
+				KvGetString(g_hKv_FtpTargets, "port", sPort, sizeof(sPort), "21");
+
+				decl String:sDlUrl[256];
+				KvGetString(g_hKv_FtpTargets, "dl_url", sDlUrl, sizeof(sDlUrl));
 
 				decl String:sFtpURL[512];
+				KvGetString(g_hKv_FtpTargets, "format", sFtpURL, sizeof(sFtpURL), "ftp://%user:%pw@%host:%port%path%file");
+				FormatFTPUrl(sUser, sPassword, sHost, sPort, sForcePath, sRemoteFile, sFtpURL, sizeof(sFtpURL));
+
 				decl String:sDownloadURL[512];
-				Format(sFtpURL, sizeof(sFtpURL), "ftp://%s:%s@%s:%i%s%s", sUser, sPassword, sHost, iPort, sForcePath, sRemoteFile);
-				Format(sDownloadURL, sizeof(sDownloadURL), "http://%s/%s%s%s", sHost, sUser, sForcePath, sRemoteFile);
+				Format(sDownloadURL, sizeof(sDownloadURL), "%s%s", sDlUrl, sRemoteFile);
+				LogMessage("sDownloadUrl: %s | sFtpUrl: %s", sDownloadURL, sFtpURL);
+
+				LogMessage("sLocalFile: %s", sLocalFile);
+
 				decl String:sAnnounceMessage[512];
 				FormatAnnounceMessage(sDownloadURL, sAnnounceMessage, sizeof(sAnnounceMessage));
 				if (GetConVarBool(g_hCvarAnnounceOnDiscord)) {
@@ -425,6 +435,28 @@ public FormatAnnounceMessage(const String:sDownloadUrl[], String:sBuffer[], maxl
 	}
 	if(StrContains(sBuffer, "%dl_url", false) != -1) {
 		ReplaceString(sBuffer, maxlength, "%dl_url", sDownloadUrl, false);
+	}
+}
+
+public FormatFTPUrl(const String:sUser[], const String:sPassword[], const String:sHost[], const String:sPort[], const String:sPath[], const String:sFile[], String:sBuffer[], maxlength) {
+	// ftp://%user:%pw@%host:%port%path%file
+	if(StrContains(sBuffer, "%user", false) != -1) {
+		ReplaceString(sBuffer, maxlength, "%user", sUser, false);
+	}
+	if(StrContains(sBuffer, "%pw", false) != -1) {
+		ReplaceString(sBuffer, maxlength, "%pw", sPassword, false);
+	}
+	if(StrContains(sBuffer, "%host", false) != -1) {
+		ReplaceString(sBuffer, maxlength, "%host", sHost, false);
+	}
+	if(StrContains(sBuffer, "%port", false) != -1) {
+		ReplaceString(sBuffer, maxlength, "%port", sPort, false);
+	}
+	if(StrContains(sBuffer, "%path", false) != -1) {
+		ReplaceString(sBuffer, maxlength, "%path", sPath, false);
+	}
+	if(StrContains(sBuffer, "%file", false) != -1) {
+		ReplaceString(sBuffer, maxlength, "%file", sFile, false);
 	}
 }
 

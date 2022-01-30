@@ -115,6 +115,7 @@ public Action:Timer_UploadDemo(Handle:timer, Handle:hDataPack) {
 }
 
 public CompressionComplete(BZ_Error:iError, String:inFile[], String:outFile[], any:data) {
+	LogMessage("Compression completed: %i", iError);
 	if(iError == BZ_OK) {
 		LogMessage("%s compressed to %s", inFile, outFile);
 		EasyFTP_UploadFile(g_sFtpTarget, outFile, "/", UploadComplete);
@@ -124,6 +125,7 @@ public CompressionComplete(BZ_Error:iError, String:inFile[], String:outFile[], a
 }
 
 public UploadComplete(const String:sTarget[], const String:sLocalFile[], const String:sRemoteFile[], iErrorCode, any:data) {
+	LogMessage("Upload completed: %d", iErrorCode);
 	if(iErrorCode == 0 && g_bDelete) {
 		DeleteFile(sLocalFile);
 		if(StrEqual(sLocalFile[strlen(sLocalFile)-4], ".bz2")) {
@@ -132,8 +134,6 @@ public UploadComplete(const String:sTarget[], const String:sLocalFile[], const S
 			DeleteFile(sLocalNoCompressFile);
 		}
 	}
-
-	LogMessage("demo upload errorcode: %d", iErrorCode);
 }
 
 public GetConVarValueInt(const String:sConVar[]) {
