@@ -258,6 +258,7 @@ public ProcessQueue() {
 				decl String:sFtpURL[512];
 				KvGetString(g_hKv_FtpTargets, "format", sFtpURL, sizeof(sFtpURL), "ftp://%user:%pw@%host:%port%path%file");
 				FormatFTPUrl(sUser, sPassword, sHost, sPort, sForcePath, sRemoteFile, sFtpURL, sizeof(sFtpURL));
+				LogMessage("sFtpUrl: %s", sFtpURL);
 
 				decl String:sDownloadURL[512];
 				Format(sDownloadURL, sizeof(sDownloadURL), "%s%s", sDlUrl, sRemoteFile);
