@@ -11,10 +11,10 @@ bool g_bSlowdown;
 
 public Plugin myinfo = {
 	name = "Discord API",
-	author = "MoeJoe111",
+	author = "MoritzLoewenstein",
 	description = "This plugin lets you send messages to discord",
 	version = "0.5",
-	url = ""
+	url = "https://github.com/MoritzLoewenstein/sourcemod_discord"
 };
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max) {

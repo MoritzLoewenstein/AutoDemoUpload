@@ -224,7 +224,7 @@ public ProcessQueue() {
 				decl String:sHost[128];
 				KvGetString(g_hKv_FtpTargets, "host", sHost, sizeof(sHost));
 
-				decl String:sUser[32];
+				decl String:sUser[64];
 				KvGetString(g_hKv_FtpTargets, "user", sUser, sizeof(sUser));
 
 				decl String:sPassword[32];
