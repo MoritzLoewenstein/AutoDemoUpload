@@ -69,6 +69,9 @@ The demo path gets parsed from the `tv_record` command, e. g. `tv_record a/b/c/d
 Make sure the directory exists. When uploading, the demo will be in `targetfolder/demoname.dem`,  
 NOT `targetfolder/a/b/c/demoname.dem`.
 
+### How can I fix the `SSL connect error`?
+Try setting `ssl` to `none` in your RemoteTargets.cfg.
+
 
 
 
